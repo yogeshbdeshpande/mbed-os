@@ -53,6 +53,18 @@ typedef struct spi_s spi_t;
 
 #endif
 
+typedef struct {
+    int peripheral;
+    PinName mosi_pin;
+    int mosi_function;
+    PinName miso_pin;
+    int miso_function;
+    PinName sclk_pin;
+    int sclk_function;
+    PinName ssel_pin;
+    int ssel_function;
+} spi_pinmap_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -72,6 +84,14 @@ extern "C" {
  */
 SPIName spi_get_peripheral_name(PinName mosi, PinName miso, PinName mclk);
 #endif
+
+/** Initialize the SPI peripheral
+ *
+ * Configures the pins used by SPI, sets a default format and frequency, and enables the peripheral
+ * @param[out] obj  The SPI object to initialize
+ * @param[in]  pinmap pointer to structure which holds static pinmap
+ */
+void spi_init_direct(spi_t *obj, const spi_pinmap_t *pinmap);
 
 /** Initialize the SPI peripheral
  *
