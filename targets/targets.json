@@ -2131,6 +2131,7 @@
         ],
         "device_has_add": [
             "FLASH",
+			"SERIAL",
             "TRNG"
         ],
         "deliver_to_target": "LPC55S69_NS",

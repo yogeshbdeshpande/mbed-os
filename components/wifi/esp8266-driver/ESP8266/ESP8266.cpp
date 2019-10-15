@@ -234,6 +234,9 @@ bool ESP8266::start_uart_hw_flow_ctrl(void)
 
 bool ESP8266::startup(int mode)
 {
+    tr_debug("startup called with mode: %d\n", mode);
+    printf("startup called with mode: %d\n", mode);
+
     if (!(mode == WIFIMODE_STATION || mode == WIFIMODE_SOFTAP
             || mode == WIFIMODE_STATION_SOFTAP)) {
         return false;

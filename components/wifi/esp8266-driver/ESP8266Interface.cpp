@@ -30,9 +30,9 @@
 #include "platform/mbed_debug.h"
 #include "platform/mbed_wait_api.h"
 
-#ifndef MBED_CONF_ESP8266_DEBUG
-#define MBED_CONF_ESP8266_DEBUG false
-#endif
+//#ifndef MBED_CONF_ESP8266_DEBUG
+#define MBED_CONF_ESP8266_DEBUG  true
+//#endif
 
 #ifndef MBED_CONF_ESP8266_RTS
 #define MBED_CONF_ESP8266_RTS NC
@@ -167,6 +167,9 @@ int ESP8266Interface::connect(const char *ssid, const char *pass, nsapi_security
         return NSAPI_ERROR_UNSUPPORTED;
     }
 
+    tr_debug("connect1: Called with SSID: %s, Password: %s, Security: %d, Channel: %d\n", ssid, pass, security, channel);
+    printf("connect1: Called with SSID: %s, Password: %s, Security: %d, Channel: %d\n", ssid, pass, security, channel);
+    
     int err = set_credentials(ssid, pass, security);
     if (err) {
         return err;
@@ -422,6 +425,9 @@ bool ESP8266Interface::_get_firmware_ok()
 
 nsapi_error_t ESP8266Interface::_init(void)
 {
+    tr_debug("_init called\n");
+    printf("printf: _init called\n");
+    
     if (!_initialized) {
         if (_reset() != NSAPI_ERROR_OK) {
             return NSAPI_ERROR_DEVICE_ERROR;
@@ -438,9 +444,11 @@ nsapi_error_t ESP8266Interface::_init(void)
         if (!_esp.set_default_wifi_mode(ESP8266::WIFIMODE_STATION)) {
             return NSAPI_ERROR_DEVICE_ERROR;
         }
+/*
+HACK: Aslam
         if (!_esp.set_country_code_policy(true, _ch_info.country_code, _ch_info.channel_start, _ch_info.channels)) {
             return NSAPI_ERROR_DEVICE_ERROR;
-        }
+        }*/
         if (!_esp.cond_enable_tcp_passive_mode()) {
             return NSAPI_ERROR_DEVICE_ERROR;
         }

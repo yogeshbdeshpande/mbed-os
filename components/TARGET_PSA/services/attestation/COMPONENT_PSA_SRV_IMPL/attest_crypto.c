@@ -8,6 +8,12 @@
  * See BSD-3-Clause license in README.md
  */
 
+#if !defined(MBEDTLS_CONFIG_FILE)
+#include "mbedtls/config.h"
+#else
+#include MBEDTLS_CONFIG_FILE
+#endif
+
 #include "t_cose_crypto.h"
 #include "tfm_plat_defs.h"
 #include "psa/crypto.h"
@@ -30,9 +36,9 @@ struct t_cose_psa_crypto_hash {
 enum t_cose_err_t
 t_cose_crypto_pub_key_sign(int32_t cose_alg_id,
                            int32_t key_select,
-                           struct useful_buf_c hash_to_sign,
-                           struct useful_buf signature_buffer,
-                           struct useful_buf_c *signature) {
+                           struct q_useful_buf_c hash_to_sign,
+                           struct q_useful_buf signature_buffer,
+                           struct q_useful_buf_c *signature) {
     enum t_cose_err_t cose_ret = T_COSE_SUCCESS;
     psa_status_t crypto_ret;
     const size_t sig_size = t_cose_signature_size(cose_alg_id);
@@ -52,6 +58,7 @@ t_cose_crypto_pub_key_sign(int32_t cose_alg_id,
     {
         return T_COSE_ERR_NO_KID;
     }
+
 
     crypto_ret = psa_asymmetric_sign(handle,
                                      PSA_ALG_DETERMINISTIC_ECDSA(PSA_ALG_SHA_256),
@@ -77,12 +84,12 @@ t_cose_crypto_pub_key_sign(int32_t cose_alg_id,
 
 enum t_cose_err_t
 t_cose_crypto_get_ec_pub_key(int32_t key_select,
-                             struct useful_buf_c kid,
+                             struct q_useful_buf_c kid,
                              int32_t *cose_curve_id,
-                             struct useful_buf buf_to_hold_x_coord,
-                             struct useful_buf buf_to_hold_y_coord,
-                             struct useful_buf_c  *x_coord,
-                             struct useful_buf_c  *y_coord) {
+                             struct q_useful_buf buf_to_hold_x_coord,
+                             struct q_useful_buf buf_to_hold_y_coord,
+                             struct q_useful_buf_c  *x_coord,
+                             struct q_useful_buf_c  *y_coord) {
 
     enum tfm_plat_err_t err;
     enum ecc_curve_t cose_curve;
@@ -221,7 +228,7 @@ t_cose_crypto_hash_start(struct t_cose_crypto_hash *hash_ctx,
 }
 
 void t_cose_crypto_hash_update(struct t_cose_crypto_hash *hash_ctx,
-                               struct useful_buf_c data_to_hash)
+                               struct q_useful_buf_c data_to_hash)
 {
     struct t_cose_psa_crypto_hash *psa_hash_ctx;
 
@@ -238,8 +245,8 @@ void t_cose_crypto_hash_update(struct t_cose_crypto_hash *hash_ctx,
 
 enum t_cose_err_t
 t_cose_crypto_hash_finish(struct t_cose_crypto_hash *hash_ctx,
-                          struct useful_buf buffer_to_hold_result,
-                          struct useful_buf_c *hash_result) {
+                          struct q_useful_buf buffer_to_hold_result,
+                          struct q_useful_buf_c *hash_result) {
     enum t_cose_err_t cose_ret = T_COSE_SUCCESS;
     psa_status_t psa_ret;
     struct t_cose_psa_crypto_hash *psa_hash_ctx;

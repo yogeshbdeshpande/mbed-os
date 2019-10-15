@@ -13,7 +13,7 @@
 #define __T_COSE_CRYPTO_H__
 
 #include "t_cose_common.h"
-#include "useful_buf.h"
+#include "q_useful_buf.h"
 #include <stdint.h>
 #include "t_cose_defines.h"
 
@@ -148,9 +148,9 @@ static inline size_t t_cose_signature_size(int32_t cose_sig_alg_id);
 enum t_cose_err_t
 t_cose_crypto_pub_key_sign(int32_t cose_alg_id,
                            int32_t key_select,
-                           struct useful_buf_c hash_to_sign,
-                           struct useful_buf signature_buffer,
-                           struct useful_buf_c *signature);
+                           struct q_useful_buf_c hash_to_sign,
+                           struct q_useful_buf signature_buffer,
+                           struct q_useful_buf_c *signature);
 
 
 /**
@@ -206,10 +206,9 @@ t_cose_crypto_pub_key_sign(int32_t cose_alg_id,
 enum t_cose_err_t
 t_cose_crypto_pub_key_verify(int32_t cose_alg_id,
                              int32_t key_select,
-                             struct useful_buf_c key_id,
-                             struct useful_buf_c hash_to_verify,
-                             struct useful_buf_c signature);
-
+                             struct q_useful_buf_c key_id,
+                             struct q_useful_buf_c hash_to_verify,
+                             struct q_useful_buf_c signature);
 
 /**
  * The size of X and Y coordinate in 2 parameter style EC public
@@ -270,12 +269,12 @@ t_cose_crypto_pub_key_verify(int32_t cose_alg_id,
  */
 enum t_cose_err_t
 t_cose_crypto_get_ec_pub_key(int32_t key_select,
-                             struct useful_buf_c kid,
+                             struct q_useful_buf_c kid,
                              int32_t *cose_curve_id,
-                             struct useful_buf buf_to_hold_x_coord,
-                             struct useful_buf buf_to_hold_y_coord,
-                             struct useful_buf_c  *x_coord,
-                             struct useful_buf_c  *y_coord);
+                             struct q_useful_buf buf_to_hold_x_coord,
+                             struct q_useful_buf buf_to_hold_y_coord,
+                             struct q_useful_buf_c  *x_coord,
+                             struct q_useful_buf_c  *y_coord);
 
 
 /*
@@ -361,7 +360,7 @@ t_cose_crypto_hash_start(struct t_cose_crypto_hash *hash_ctx,
  * not do anything.
  */
 void t_cose_crypto_hash_update(struct t_cose_crypto_hash *hash_ctx,
-                               struct useful_buf_c data_to_hash);
+                               struct q_useful_buf_c data_to_hash);
 
 
 /**
@@ -391,9 +390,8 @@ void t_cose_crypto_hash_update(struct t_cose_crypto_hash *hash_ctx,
  */
 enum t_cose_err_t
 t_cose_crypto_hash_finish(struct t_cose_crypto_hash *hash_ctx,
-                          struct useful_buf buffer_to_hold_result,
-                          struct useful_buf_c *hash_result);
-
+                          struct q_useful_buf buffer_to_hold_result,
+                          struct q_useful_buf_c *hash_result);
 
 
 /*
@@ -409,5 +407,8 @@ static inline size_t t_cose_signature_size(int32_t cose_sig_alg_id)
     }
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __T_COSE_CRYPTO_H__ */

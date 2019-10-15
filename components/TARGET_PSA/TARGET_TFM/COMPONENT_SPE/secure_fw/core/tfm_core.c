@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include "hal/serial_api.h"
 #include "region_defs.h"
 #include "tfm_core.h"
 #include "tfm_internal.h"
@@ -74,6 +75,12 @@ void configure_ns_code(void)
     ns_entry = (nsfptr_t) cmse_nsfptr_create(entry_ptr);
 }
 
+#if DEVICE_SERIAL
+    extern int stdio_uart_inited;
+    extern serial_t stdio_uart;
+#endif
+
+
 int32_t tfm_core_init(void)
 {
     /* Enables fault handlers */
@@ -88,6 +95,12 @@ int32_t tfm_core_init(void)
     __enable_irq();
 
     LOG_MSG("Secure image initializing!");
+#if DEVICE_SERIAL
+    serial_init(&stdio_uart, STDIO_UART_TX, STDIO_UART_RX);
+    serial_baud(&stdio_uart, MBED_CONF_PLATFORM_STDIO_BAUD_RATE);
+#endif
+
+
 
 #ifdef TFM_CORE_DEBUG
     printf("TFM level is: %d\r\n", TFM_LVL);

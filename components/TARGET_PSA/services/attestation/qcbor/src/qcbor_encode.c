@@ -407,16 +407,23 @@ void QCBOREncode_AddBuffer(QCBOREncodeContext *me, uint8_t uMajorType, UsefulBuf
    if(me->uError == QCBOR_SUCCESS) {
       // If it is not Raw CBOR, add the type and the length
       if(uMajorType != CBOR_MAJOR_NONE_TYPE_RAW) {
-         AppendEncodedTypeAndNumber(me, uMajorType, Bytes.len);
+         uint8_t uRealMajorType = uMajorType;
+         if(uRealMajorType == CBOR_MAJOR_NONE_TYPE_BSTR_LEN_ONLY) {
+            uRealMajorType = CBOR_MAJOR_TYPE_BYTE_STRING;
+         }
+         AppendEncodedTypeAndNumber(me, uRealMajorType, Bytes.len);
       }
 
-      // Actually add the bytes
-      UsefulOutBuf_AppendUsefulBuf(&(me->OutBuf), Bytes);
+      if(uMajorType != CBOR_MAJOR_NONE_TYPE_BSTR_LEN_ONLY) {
+         // Actually add the bytes
+         UsefulOutBuf_AppendUsefulBuf(&(me->OutBuf), Bytes);
+      }
 
       // Update the array counting if there is any nesting at all
       me->uError = Nesting_Increment(&(me->nesting));
    }
 }
+
 
 
 /*
@@ -541,12 +548,11 @@ void QCBOREncode_CloseMapOrArray(QCBOREncodeContext *me,
          // Return pointer and length to the enclosed encoded CBOR. The intended
          // use is for it to be hashed (e.g., SHA-256) in a COSE implementation.
          // This must be used right away, as the pointer and length go invalid
-         // on any subsequent calls to this function because of the
-         // InsertEncodedTypeAndNumber() call that slides data to the right.
+         // on any subsequent calls to this function because there might be calls to
+         // InsertEncodedTypeAndNumber() that slides data to the right.
          if(pWrappedCBOR) {
             const UsefulBufC PartialResult = UsefulOutBuf_OutUBuf(&(me->OutBuf));
-            const size_t uBstrLen = UsefulOutBuf_GetEndPosition(&(me->OutBuf)) - uEndPosition;
-            *pWrappedCBOR = UsefulBuf_Tail(PartialResult, uInsertPosition+uBstrLen);
+            *pWrappedCBOR = UsefulBuf_Tail(PartialResult, uInsertPosition);
          }
          Nesting_Decrease(&(me->nesting));
       }

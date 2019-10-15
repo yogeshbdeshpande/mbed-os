@@ -11,6 +11,10 @@
 #ifndef __T_COSE_SIGN1_H__
 #define __T_COSE_SIGN1_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 #include "qcbor.h"
@@ -61,7 +65,7 @@ struct t_cose_sign1_ctx {
     /* Private data structure */
     uint8_t             buffer_for_protected_headers[
                         T_COSE_SIGN1_MAX_PROT_HEADER];
-    struct useful_buf_c protected_headers;
+    struct q_useful_buf_c protected_headers;
     int32_t             cose_algorithm_id;
     int32_t             key_select;
     bool                short_circuit_sign;
@@ -175,7 +179,10 @@ enum t_cose_err_t t_cose_sign1_init(struct t_cose_sign1_ctx *me,
  * cbor_encode_ctx by calling \c QCBOREncode_Finish()
  */
 enum t_cose_err_t t_cose_sign1_finish(struct t_cose_sign1_ctx *me,
-                                      struct useful_buf_c payload);
+                                      struct q_useful_buf_c payload);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __T_COSE_SIGN1_H__ */
