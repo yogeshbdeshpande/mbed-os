@@ -31,7 +31,7 @@
 #include "platform/mbed_wait_api.h"
 
 //#ifndef MBED_CONF_ESP8266_DEBUG
-#define MBED_CONF_ESP8266_DEBUG  true
+#define MBED_CONF_ESP8266_DEBUG  false
 //#endif
 
 #ifndef MBED_CONF_ESP8266_RTS
